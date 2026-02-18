@@ -4,6 +4,7 @@
   "description": "Homebridge plugin adding Shelly Plus Uni support",
   "main": "dist/index.js",
   "scripts": {
+    "prebuild": "./scripts/update-shellies-ng.sh",
     "build": "rimraf ./dist && tsc",
     "lint": "eslint ./src --ext .ts,.js --max-warnings=0",
     "test": "jest",

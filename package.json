@@ -40,7 +40,8 @@
     "dist/**/*",
     "config.schema.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "vendor/shellies-ng/**/*"
   ],
   "devDependencies": {
     "@types/jest": "^28.1.2",
@@ -55,6 +56,6 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "shellies-ng": "^1.5.1"
+    "shellies-ng": "file:vendor/shellies-ng"
   }
 }

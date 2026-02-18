@@ -14,6 +14,7 @@ import {
   MdnsDeviceDiscoverer,
   Shellies,
 } from 'shellies-ng';
+import EventEmitter from 'eventemitter3';
 
 import { CustomCharacteristics, createCharacteristics } from './utils/characteristics';
 import { CustomServices, createServices } from './utils/services';
@@ -24,25 +25,59 @@ import { PlatformOptions } from './config';
 type AccessoryUuid = string;
 
 /**
- * The npm package name for this plugin.
+ * The name of this plugin.
  */
-export const PLUGIN_NAME = 'homebridge-shelly-ng-plus-uni';
+export const PLUGIN_NAME = 'homebridge-shelly-ng';
 
 /**
  * The name of this homebridge platform.
  */
 export const PLATFORM_NAME = 'ShellyNG';
 
+type DeviceDiscovererEvents = {
+  discover: (identifiers: DeviceIdentifiers) => void;
+  error: (error: Error) => void;
+};
+
+/**
+ * Base utility for discoverers that emit throttled discover events.
+ */
+abstract class BaseDeviceDiscoverer extends EventEmitter<DeviceDiscovererEvents> implements DeviceDiscoverer {
+  constructor(readonly emitInterval = 20) {
+    super();
+  }
+
+  /**
+   * Emits a device after the configured time interval has passed.
+   */
+  protected emitDevice(identifiers: DeviceIdentifiers): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.handleDiscoveredDevice(identifiers);
+        resolve();
+      }, this.emitInterval);
+    });
+  }
+
+  /**
+   * Compatibility shim for the previous DeviceDiscoverer base class.
+   * Newer shellies-ng versions only require discoverer implementations to emit events.
+   */
+  protected handleDiscoveredDevice(identifiers: DeviceIdentifiers) {
+    this.emit('discover', identifiers);
+  }
+}
+
 /**
  * Utility class that "discovers" devices from the configuration options.
  */
-export class ConfigDeviceDiscoverer extends DeviceDiscoverer {
+export class ConfigDeviceDiscoverer extends BaseDeviceDiscoverer {
   /**
    * @param options - The platform configuration options.
    * @param emitInterval - The interval, in milliseconds, to wait between each emitted device.
    */
-  constructor(readonly options: PlatformOptions, readonly emitInterval = 20) {
-    super();
+  constructor(readonly options: PlatformOptions, emitInterval = 20) {
+    super(emitInterval);
   }
 
   /**
@@ -55,34 +90,23 @@ export class ConfigDeviceDiscoverer extends DeviceDiscoverer {
         await this.emitDevice({
           deviceId: id,
           hostname: opts.hostname,
-        });
+          protocol: 'websocket',
+        } as DeviceIdentifiers);
       }
     }
-  }
-
-  /**
-   * Emits a device after the configured time interval has passed.
-   */
-  protected emitDevice(identifiers: DeviceIdentifiers): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.handleDiscoveredDevice(identifiers);
-        resolve();
-      }, this.emitInterval);
-    });
   }
 }
 
 /**
  * Utility class that "discovers" devices from a cache.
  */
-export class CacheDeviceDiscoverer extends DeviceDiscoverer {
+export class CacheDeviceDiscoverer extends BaseDeviceDiscoverer {
   /**
    * @param deviceCache - The cached devices.
    * @param emitInterval - The interval, in milliseconds, to wait between each emitted device.
    */
-  constructor(readonly deviceCache: DeviceCache, readonly emitInterval = 20) {
-    super();
+  constructor(readonly deviceCache: DeviceCache, emitInterval = 20) {
+    super(emitInterval);
   }
 
   /**
@@ -94,20 +118,9 @@ export class CacheDeviceDiscoverer extends DeviceDiscoverer {
       await this.emitDevice({
         deviceId: d.id,
         hostname: d.hostname,
-      });
+        protocol: 'websocket',
+      } as DeviceIdentifiers);
     }
-  }
-
-  /**
-   * Emits a device after the configured time interval has passed.
-   */
-  protected emitDevice(identifiers: DeviceIdentifiers): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.handleDiscoveredDevice(identifiers);
-        resolve();
-      }, this.emitInterval);
-    });
   }
 }
 
@@ -170,10 +183,7 @@ export class ShellyPlatform implements DynamicPlatformPlugin {
 
     // setup shellies-ng
     this.shellies = new Shellies({
-      websocket: {
-        ...this.options.websocket,
-        clientId: 'homebridge-shelly-ng-plus-uni-' + Math.round(Math.random() * 1000000),
-      },
+      websocket: { ...this.options.websocket, clientId: 'homebridge-shelly-ng-' + Math.round(Math.random() * 1000000) },
       autoLoadStatus: true,
       autoLoadConfig: true,
       deviceOptions: this.options.deviceOptions,

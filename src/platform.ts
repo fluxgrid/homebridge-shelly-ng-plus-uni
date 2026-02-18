@@ -24,9 +24,9 @@ import { PlatformOptions } from './config';
 type AccessoryUuid = string;
 
 /**
- * The name of this plugin.
+ * The npm package name for this plugin.
  */
-export const PLUGIN_NAME = 'homebridge-shelly-ng';
+export const PLUGIN_NAME = 'homebridge-shelly-ng-plus-uni';
 
 /**
  * The name of this homebridge platform.
@@ -170,7 +170,10 @@ export class ShellyPlatform implements DynamicPlatformPlugin {
 
     // setup shellies-ng
     this.shellies = new Shellies({
-      websocket: { ...this.options.websocket, clientId: 'homebridge-shelly-ng-' + Math.round(Math.random() * 1000000) },
+      websocket: {
+        ...this.options.websocket,
+        clientId: 'homebridge-shelly-ng-plus-uni-' + Math.round(Math.random() * 1000000),
+      },
       autoLoadStatus: true,
       autoLoadConfig: true,
       deviceOptions: this.options.deviceOptions,

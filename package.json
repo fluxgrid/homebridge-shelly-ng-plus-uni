@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-shelly-ng",
+  "name": "homebridge-shelly-ng-plus-uni",
   "version": "1.6.0",
-  "description": "Homebridge plugin for the next generation of Shelly devices",
+  "description": "Homebridge plugin adding Shelly Plus Uni support",
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf ./dist && tsc",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexryd/homebridge-shelly-ng.git"
+    "url": "git+https://github.com/fluxgrid/homebridge-shelly-ng-plus-uni.git"
   },
   "keywords": [
     "homebridge",
@@ -24,15 +24,24 @@
     "shelly"
   ],
   "author": "Alexander Rydén",
+  "contributors": [
+    "fluxgrid"
+  ],
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/alexryd/homebridge-shelly-ng/issues"
+    "url": "https://github.com/fluxgrid/homebridge-shelly-ng-plus-uni/issues"
   },
-  "homepage": "https://github.com/alexryd/homebridge-shelly-ng#readme",
+  "homepage": "https://github.com/fluxgrid/homebridge-shelly-ng-plus-uni#readme",
   "funding": {
     "type": "kofi",
     "url": "https://ko-fi.com/alexryd"
   },
+  "files": [
+    "dist/**/*",
+    "config.schema.json",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@types/jest": "^28.1.2",
     "@types/node": "^18.0.0",

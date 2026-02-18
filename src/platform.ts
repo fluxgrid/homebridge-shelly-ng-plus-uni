@@ -42,7 +42,7 @@ type DeviceDiscovererEvents = {
 /**
  * Base utility for discoverers that emit throttled discover events.
  */
-abstract class BaseDeviceDiscoverer extends EventEmitter<DeviceDiscovererEvents> implements DeviceDiscoverer {
+abstract class BaseDeviceDiscoverer extends EventEmitter<DeviceDiscovererEvents> {
   constructor(readonly emitInterval = 20) {
     super();
   }
@@ -302,7 +302,7 @@ export class ShellyPlatform implements DynamicPlatformPlugin {
     // create a device discoverer
     const discoverer = new ConfigDeviceDiscoverer(this.options);
     // register it
-    this.shellies.registerDiscoverer(discoverer);
+    this.shellies.registerDiscoverer(discoverer as unknown as DeviceDiscoverer);
     // run it
     return discoverer.run();
   }
@@ -314,7 +314,7 @@ export class ShellyPlatform implements DynamicPlatformPlugin {
     // create a device discoverer
     const discoverer = new CacheDeviceDiscoverer(this.deviceCache);
     // register it
-    this.shellies.registerDiscoverer(discoverer);
+    this.shellies.registerDiscoverer(discoverer as unknown as DeviceDiscoverer);
     // run it
     return discoverer.run();
   }
@@ -326,7 +326,7 @@ export class ShellyPlatform implements DynamicPlatformPlugin {
     // create a device discoverer
     const discoverer = new MdnsDeviceDiscoverer(this.options.mdns);
     // register it
-    this.shellies.registerDiscoverer(discoverer);
+    this.shellies.registerDiscoverer(discoverer as unknown as DeviceDiscoverer);
 
     // log errors
     discoverer.on('error', (error: Error) => {

@@ -1,6 +1,6 @@
 {
   "name": "homebridge-shelly-ng-plus-uni",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Homebridge plugin adding Shelly Plus Uni support",
   "main": "dist/index.js",
   "scripts": {

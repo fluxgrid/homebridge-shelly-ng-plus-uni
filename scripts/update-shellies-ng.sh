@@ -55,4 +55,11 @@ pkg.homepage = repoUrl.replace(/^git\+/, '').replace(/\.git$/, '#readme');
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
 NODE
 
-echo "Done. Updated version $(node -p \"require('$DEST/package.json').version\")"
+UPDATED_VERSION=$(DEST="$DEST" node <<'NODE'
+const path = process.env.DEST + '/package.json';
+const pkg = require(path);
+process.stdout.write(pkg.version);
+NODE
+)
+
+echo "Done. Updated version ${UPDATED_VERSION}"

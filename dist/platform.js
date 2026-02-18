@@ -8,9 +8,9 @@ const device_cache_1 = require("./utils/device-cache");
 const device_delegates_1 = require("./device-delegates");
 const config_1 = require("./config");
 /**
- * The name of this plugin.
+ * The npm package name for this plugin.
  */
-exports.PLUGIN_NAME = 'homebridge-shelly-ng';
+exports.PLUGIN_NAME = 'homebridge-shelly-ng-plus-uni';
 /**
  * The name of this homebridge platform.
  */
@@ -121,7 +121,10 @@ class ShellyPlatform {
         this.customServices = Object.freeze((0, services_1.createServices)(api, this.customCharacteristics));
         // setup shellies-ng
         this.shellies = new shellies_ng_1.Shellies({
-            websocket: { ...this.options.websocket, clientId: 'homebridge-shelly-ng-' + Math.round(Math.random() * 1000000) },
+            websocket: {
+                ...this.options.websocket,
+                clientId: 'homebridge-shelly-ng-plus-uni-' + Math.round(Math.random() * 1000000),
+            },
             autoLoadStatus: true,
             autoLoadConfig: true,
             deviceOptions: this.options.deviceOptions,

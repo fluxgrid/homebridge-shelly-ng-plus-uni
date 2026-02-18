@@ -1,23 +1,16 @@
-This is a modified repository with typescript and libraries already compiled - adding support for shelly plus uni.
+<a href="https://github.com/fluxgrid/homebridge-shelly-ng-plus-uni"><img src="homebridge-shelly-ng.png" height="120"></a>
 
-Obviously, this is not the ideal path for support.  But I noticed that pull requests are being held up in the official repo.
+# homebridge-shelly-ng-plus-uni
+[![npm-version](https://badgen.net/npm/v/homebridge-shelly-ng-plus-uni)](https://www.npmjs.com/package/homebridge-shelly-ng-plus-uni)
+[![homebridge-compatible](https://badgen.net/badge/homebridge/compatible/green)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
-This only gives single switch support for the plus uni.
+Homebridge plugin for the next generation of Shelly devices, extended with native
+support for the Shelly Plus Uni.
 
-The original shellies-ng library is only modified with the new plus-uni class.
-The main repository only has the delegate added for the plus-uni
-
-No need to npm install, just download this entire project and add it to your homebridge/node_modules folder.
-
-Cheers.
-
-
-
-<a href="https://github.com/alexryd/homebridge-shelly-ng"><img src="homebridge-shelly-ng.png" height="120"></a>
-
-# homebridge-shelly-ng
-[![npm-version](https://badgen.net/npm/v/homebridge-shelly-ng)](https://www.npmjs.com/package/homebridge-shelly-ng)
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+This project is a fork of [homebridge-shelly-ng](https://github.com/alexryd/homebridge-shelly-ng)
+with the minimal changes required to control the Plus Uni module while the upstream
+work is still in review. Everything is published as a standard npm module so you
+can install and update it like any other Homebridge plugin.
 
 [Homebridge](https://homebridge.io) plugin for [Shelly](https://shelly.cloud),
 enabling HomeKit support for the next generation of Shelly devices.
@@ -44,7 +37,7 @@ Either install this plugin through [Homebridge Config UI X](https://github.com/o
 or manually by following these instructions:
 
 1. Install Homebridge by [following the instructions](https://github.com/homebridge/homebridge/wiki).
-2. Install this plugin by running `npm install -g homebridge-shelly-ng`.
+2. Install this plugin by running `npm install -g homebridge-shelly-ng-plus-uni`.
 3. Add this plugin to the Homebridge config.json:
   ```
   "platforms": [
@@ -110,7 +103,7 @@ See below for descriptions of each configuration option.
 | Option                          | Description |
 | ---                             | ---         |
 | `devices`                       | An array of one or more objects with options for specific devices. |
-| `devices. id`                   | The device ID. [Here's how to find it](https://github.com/alexryd/homebridge-shelly-ng/wiki/Finding-a-device-ID). |
+| `devices. id`                   | The device ID. [Here's how to find it](#finding-a-device-id). |
 | `devices. name`                 | The name of the device. This will be shown in the homebridge log and will be used as the default name when the device is added to HomeKit. Note though that setting this value after the device has been added will not change the name in HomeKit. If no name is specified, this plugin will use the device name set in the Shelly app, or the name of the device model. |
 | `devices. exclude`              | Set this option to `true` to make this plugin ignore this device. |
 | `devices. hostname`             | The IP address or hostname of the device. Set this value if your device can't be discovered automatically. |
@@ -125,3 +118,13 @@ See below for descriptions of each configuration option.
 | `websocket. requestTimeout`     | The time, in seconds, to wait for a response before a request is aborted. |
 | `websocket. pingInterval`       | The interval, in seconds, at which ping requests should be made to verify that the connection is open. Set to `0` to disable. |
 | `websocket. reconnectInterval`  | The interval, in seconds, at which a connection attempt should be made after a socket has been closed. If an array or a comma-separated list of numbers is specified, the first value will be used for the first connection attempt, the second value for the second attempt and so on. When the last value has been reached, it will be used for all subsequent connection attempts; unless the value is `0`, in which case no more attempts will be made. Set to `0` to disable. |
+
+## Finding a device ID
+
+Each Shelly device exposes its identifier in multiple places:
+
+1. Open the Shelly mobile app, select the device, and tap the gear icon. The **Device ID** entry is listed near the top and typically looks like `shellyplus1pm-abcdef123456` or `plusuni-abcdef123456`.
+2. If the device web UI is enabled, browse to the IP address (e.g. `http://192.168.1.200`) and open **Settings → Device Info** to see the same identifier.
+3. For devices already paired with this plugin, the ID is printed in the Homebridge logs when the accessory is initialized (`[Shelly NG] Found device plusuni-abcdef123456`).
+
+Copy that value (without surrounding quotes) into the `devices[].id` field inside your Homebridge `config.json`.

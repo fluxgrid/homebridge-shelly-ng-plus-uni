@@ -7,9 +7,9 @@ import { DeviceDelegate } from './device-delegates';
 import { PlatformOptions } from './config';
 declare type AccessoryUuid = string;
 /**
- * The name of this plugin.
+ * The npm package name for this plugin.
  */
-export declare const PLUGIN_NAME = "homebridge-shelly-ng";
+export declare const PLUGIN_NAME = "homebridge-shelly-ng-plus-uni";
 /**
  * The name of this homebridge platform.
  */

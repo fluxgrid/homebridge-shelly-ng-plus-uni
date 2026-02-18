@@ -63,7 +63,7 @@ abstract class BaseDeviceDiscoverer extends EventEmitter<DeviceDiscovererEvents>
    * Compatibility shim for the previous DeviceDiscoverer base class.
    * Newer shellies-ng versions only require discoverer implementations to emit events.
    */
-  protected handleDiscoveredDevice(identifiers: DeviceIdentifiers) {
+  handleDiscoveredDevice(identifiers: DeviceIdentifiers) {
     this.emit('discover', identifiers);
   }
 }
